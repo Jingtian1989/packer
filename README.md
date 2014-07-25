@@ -1,3 +1,3 @@
 Packer
 =========
-**Packer** is a fast depolying tool.
+**Packer** is a small container engine.
