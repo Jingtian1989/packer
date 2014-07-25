@@ -62,7 +62,7 @@ int attach_loop_device(int fd, T dev)
 
 	loop_info.lo_offset = 0;
 	loop_info.lo_flags = LO_FLAGS_AUTOCLEAR;
-	snprintf(loop_info.lo_name, LO_NAME_SIZE, "/dev/loop%d", loop_index);
+	snprintf(loop_info.lo_name, LO_NAME_SIZE, "/dev/loop%d", dev->loop_index);
 
 	if ((ret = ioctl(dev->loop_fd, LOOP_SET_STATUS64, &loop_info)) < 0)
 		close_loop_device(fd, dev);
@@ -75,9 +75,8 @@ void detach_loop_device(int fd, T dev)
 	
 	loop_info.lo_offset = 0;
 	loop_info.lo_flags = 0;
-	snprintf(loop_info.lo_name, LO_NAME_SIZE, "/dev/loop%d", loop_index);
+	snprintf(loop_info.lo_name, LO_NAME_SIZE, "/dev/loop%d", dev->loop_index);
 	ioctl(dev->loop_fd, LOOP_SET_STATUS64, &loop_info);
-
 	close_loop_device(fd, dev);
 	return;
 }

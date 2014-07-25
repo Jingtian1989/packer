@@ -26,17 +26,13 @@ struct T
 int create_devmapper_device(char *path, int size, loop_dev_t *dev)
 {
 	int fd, ret;
+
+	ret = -1;
 	if ((fd = create_sparse_file(path, size)) < 0)
-	{
-		ret = -1;
 		goto err_create_file;
-	}
 	
 	if ((*dev = new_loop_device()) == NULL)
-	{	
-		ret = -1;
 		goto err_new_loop;
-	}
 
 	if ((ret = attach_loop_device(fd, *dev) < 0))
 		goto err_attach_dev;
@@ -67,29 +63,28 @@ int create_thinpool(char *name, loop_dev_t data_dev, loop_dev_t metadata_dev, in
 	if ((ret = ioctl(data_dev, BLKGETSIZE64, &size)) < 0)
 		goto err_ioctl;
 	
+	ret = -1;
 	if ((task = dm_task_create(DM_DEVICE_CREATE)) == NULL)
-	{
-		ret = -1;
 		goto err_create;
-	}
 
 	if ((ret = dm_task_set_name(task, name)) != 1)
-	{
-		ret = -1;
 		goto err_set_name;
-	}
+
 	snprintf(params, "%s %s %d 32768 1 skip_block_zeroing", get_loop_device_path(metadata_dev), 
 		get_loop_device_path(data_dev), device_set->thinpool_block_size);
+
 	if ((ret = dm_task_add_target(task, 0, size/512, "thin-pool", params)) != 1)
 	{
 		ret = -1;
 		goto err_add_target;
 	}
+
 	if ((ret = dm_task_set_cookie(task, &cookie, 0)) != 1)
 	{
 		ret = -1;
 		goto err_set_cookie;
 	}
+		
 	if ((ret = dm_task_run(task)) != 1)
 	{
 		ret = -1;
