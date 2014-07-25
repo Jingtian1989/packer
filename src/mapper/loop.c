@@ -2,6 +2,7 @@
 #include <linux/fs.h>
 #include <sys/stat.h>
 #include <sys/ioctl.h>
+#include "mem.h"
 #include "params.h"
 #include "loop.h"
 
