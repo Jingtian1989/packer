@@ -5,8 +5,6 @@
 #define T device_set_t
 typedef struct T *T;
 
-
-
 #define DEFAULT_ROOT_PATH 			"/var/lib/packer/devmapper"
 #define DEFAULT_METADATA_PATH 		"/var/lib/packer/devmapper/metadata"
 #define DEFAULT_DATA_LOOP_PATH 		"/var/lib/packer/devmapper/devmapper/data"
@@ -20,4 +18,5 @@ typedef struct T *T;
 
 extern T new_device_set(char *root);
 
-#undef
+#undef T
+#endif
